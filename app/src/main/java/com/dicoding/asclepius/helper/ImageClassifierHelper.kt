@@ -1,6 +1,7 @@
 package com.dicoding.asclepius.helper
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -19,7 +20,7 @@ import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 
 class ImageClassifierHelper(
     var threshold: Float = 0.1f,
-    var maxResults: Int = 3,
+    var maxResults: Int = 1,
     val modelName: String = "cancer_classification.tflite",
     val context: Context,
     val classifierListener: ClassifierListener?
@@ -81,7 +82,7 @@ class ImageClassifierHelper(
             // Fallback for older versions
             @Suppress("DEPRECATION")
             MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-        }
+        }.copy(Bitmap.Config.ARGB_8888, true)
 
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(bitmap))
 
