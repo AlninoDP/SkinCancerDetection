@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
+import com.dicoding.asclepius.getImageUri
 import com.dicoding.asclepius.helper.ImageClassifierHelper
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.text.NumberFormat
@@ -33,17 +34,41 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
             galleryButton.setOnClickListener { startGallery() }
             analyzeButton.setOnClickListener { analyzeImage() }
+            cameraButton.setOnClickListener{ startCamera()}
         }
 
 
     }
-    private fun startCamera(){
-        currentImageUri
+
+    // Camera
+    private fun startCamera() {
+        currentImageUri = getImageUri(this)
+        launcherIntentCamera.launch(currentImageUri)
     }
 
+    private val launcherIntentCamera = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { isSuccess ->
+        if (isSuccess) {
+            showImage()
+        }
+    }
+
+    // Gallery
     private fun startGallery() {
         launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
+
+    private val launcherGallery =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+            if (uri != null) {
+                currentImageUri = uri
+                showImage()
+            } else {
+                Log.d("Photo Picker", "No Media Selected")
+            }
+        }
+
 
     private fun showImage() {
         currentImageUri?.let {
@@ -53,7 +78,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun analyzeImage() {
-        // TODO: Menganalisa gambar yang berhasil ditampilkan.
         imageClassifierHelper = ImageClassifierHelper(
             context = this,
             classifierListener = object : ImageClassifierHelper.ClassifierListener {
@@ -96,16 +120,9 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    // Register Activity Callback for Gallery
-    private val launcherGallery =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-            if (uri != null) {
-                currentImageUri = uri
-                showImage()
-            } else {
-                Log.d("Photo Picker", "No Media Selected")
-            }
-        }
+
+
+
 
 
     /// Request Permission
