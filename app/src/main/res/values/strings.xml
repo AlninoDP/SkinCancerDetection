@@ -13,4 +13,5 @@
     <string name="image_description">News Item</string>
     <string name="news_title">News Title</string>
     <string name="news_description">News description</string>
+    <string name="news">News</string>
 </resources>

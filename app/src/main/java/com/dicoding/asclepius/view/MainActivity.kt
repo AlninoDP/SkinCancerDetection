@@ -7,10 +7,15 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
 import com.dicoding.asclepius.getImageUri
@@ -29,11 +34,33 @@ class MainActivity : AppCompatActivity() {
     private var currentImageUri: Uri? = null
     private var croppedImageUri: Uri? = null
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_bar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_news -> {
+                val intent = Intent(this@MainActivity, HealthNewsActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_layout)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        supportActionBar?.title = "Skin Cancer Detector"
 
         requestPermissionsIfNeeded()
 
@@ -41,10 +68,7 @@ class MainActivity : AppCompatActivity() {
             galleryButton.setOnClickListener { startGallery() }
             analyzeButton.setOnClickListener { analyzeImage() }
             cameraButton.setOnClickListener { startCamera() }
-            historyButton.setOnClickListener {
-                val intent = Intent(this@MainActivity, HealthNewsActivity::class.java)
-                startActivity(intent)
-            }
+            historyButton.setOnClickListener { }
         }
     }
 
