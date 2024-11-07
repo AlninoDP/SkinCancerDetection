@@ -32,28 +32,40 @@
 
     <Button
         android:id="@+id/cameraButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/camera"
-        app:layout_constraintBottom_toTopOf="@+id/galleryButton"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:icon="@drawable/ic_add_camera"
+        app:layout_constraintBottom_toTopOf="@+id/analyzeButton"
         app:layout_constraintStart_toStartOf="parent" />
 
 
     <Button
         android:id="@+id/galleryButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/gallery"
+        app:icon="@drawable/ic_gallery"
         app:layout_constraintBottom_toTopOf="@+id/analyzeButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/historyButton"
+        app:layout_constraintHorizontal_bias="0.56"
+        app:layout_constraintStart_toEndOf="@+id/cameraButton" />
+
+    <Button
+        android:id="@+id/historyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/history"
+        app:icon="@drawable/ic_history"
+        app:layout_constraintBottom_toTopOf="@+id/analyzeButton"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/analyzeButton"

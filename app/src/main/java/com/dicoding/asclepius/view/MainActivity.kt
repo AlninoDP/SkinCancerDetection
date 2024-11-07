@@ -15,14 +15,19 @@ import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
 import com.dicoding.asclepius.getImageUri
 import com.dicoding.asclepius.helper.ImageClassifierHelper
+import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
+import java.io.File
 import java.text.NumberFormat
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageClassifierHelper: ImageClassifierHelper
 
     private var currentImageUri: Uri? = null
+    private var croppedImageUri: Uri? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +39,19 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
             galleryButton.setOnClickListener { startGallery() }
             analyzeButton.setOnClickListener { analyzeImage() }
-            cameraButton.setOnClickListener{ startCamera()}
+            cameraButton.setOnClickListener { startCamera() }
         }
+    }
 
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            croppedImageUri = UCrop.getOutput(data!!)
+            showImage()
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            val cropError = UCrop.getError(data!!)
+            showToast("Crop Error: ${cropError?.message}")
+        }
     }
 
     // Camera
@@ -46,11 +60,12 @@ class MainActivity : AppCompatActivity() {
         launcherIntentCamera.launch(currentImageUri)
     }
 
+    // if camera image taken, open ucrop activity to crop
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { isSuccess ->
         if (isSuccess) {
-            showImage()
+            currentImageUri?.let { startCropActivity(it) }
         }
     }
 
@@ -59,24 +74,37 @@ class MainActivity : AppCompatActivity() {
         launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
+    // if image selected from gallery open ucrop activity to crop
     private val launcherGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
             if (uri != null) {
                 currentImageUri = uri
-                showImage()
+                startCropActivity(uri)
             } else {
                 Log.d("Photo Picker", "No Media Selected")
             }
         }
 
+    private fun startCropActivity(sourceUri: Uri) {
+        val originalFileName = File(sourceUri.path!!).nameWithoutExtension
+        val croppedFileName = "${originalFileName}_cropped.jpg"
+
+        // Defining destination Uri
+        croppedImageUri = Uri.fromFile(File(cacheDir, croppedFileName))
+        UCrop.of(sourceUri, croppedImageUri!!)
+            .withAspectRatio(1f, 1f)
+            .withMaxResultSize(800, 800)
+            .start(this)
+    }
 
     private fun showImage() {
-        currentImageUri?.let {
+        croppedImageUri?.let {
             Log.d(TAG, "Show Image: $it")
             binding.previewImageView.setImageURI(it)
         }
     }
 
+    /// Send image to ResultActivity and the results and Go to Result Activity
     private fun analyzeImage() {
         imageClassifierHelper = ImageClassifierHelper(
             context = this,
@@ -103,14 +131,14 @@ class MainActivity : AppCompatActivity() {
 
             }
         )
-        currentImageUri?.let { imageClassifierHelper.classifyStaticImage(it) }
+        croppedImageUri?.let { imageClassifierHelper.classifyStaticImage(it) }
             ?: showToast(getString(R.string.no_image_selected))
 
     }
 
     private fun moveToResult(label: String, score: String) {
         val intent = Intent(this, ResultActivity::class.java)
-        intent.putExtra(ResultActivity.EXTRA_IMAGE_URI, currentImageUri.toString())
+        intent.putExtra(ResultActivity.EXTRA_IMAGE_URI, croppedImageUri.toString())
         intent.putExtra(ResultActivity.EXTRA_LABEL, label)
         intent.putExtra(ResultActivity.EXTRA_SCORE, score)
         startActivity(intent)
@@ -119,11 +147,6 @@ class MainActivity : AppCompatActivity() {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
-
-
-
-
 
     /// Request Permission
     private fun requestPermissionsIfNeeded() {

@@ -51,9 +51,15 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
 
-    // TODO: Tambahkan Library TensorFlow Lite
+    //  Library TensorFlow Lite
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
     implementation("org.tensorflow:tensorflow-lite-metadata:0.4.4")
     implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
+
+    // Ucrop
+    implementation("com.github.yalantis:ucrop:2.2.8")
+
+
+
 
 }
