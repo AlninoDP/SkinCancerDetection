@@ -49,3 +49,8 @@ fun getImageUriForPreQ(context: Context): Uri {
     )
     //content://package_name.fileprovider/my_images/MyCamera/20230825_133659.jpg
 }
+
+
+
+
+

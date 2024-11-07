@@ -15,6 +15,7 @@ import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
 import com.dicoding.asclepius.getImageUri
 import com.dicoding.asclepius.helper.ImageClassifierHelper
+import com.dicoding.asclepius.view.news.HealthNewsActivity
 import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.io.File
@@ -40,6 +41,10 @@ class MainActivity : AppCompatActivity() {
             galleryButton.setOnClickListener { startGallery() }
             analyzeButton.setOnClickListener { analyzeImage() }
             cameraButton.setOnClickListener { startCamera() }
+            historyButton.setOnClickListener {
+                val intent = Intent(this@MainActivity, HealthNewsActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -57,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     // Camera
     private fun startCamera() {
         currentImageUri = getImageUri(this)
-        launcherIntentCamera.launch(currentImageUri)
+        launcherIntentCamera.launch(currentImageUri!!)
     }
 
     // if camera image taken, open ucrop activity to crop

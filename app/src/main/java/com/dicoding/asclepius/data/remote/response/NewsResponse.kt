@@ -2,7 +2,7 @@ package com.dicoding.asclepius.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class Response(
+data class NewsResponse(
 
 	@field:SerializedName("articles")
 	val articles: List<ArticlesItem?>? = null,
