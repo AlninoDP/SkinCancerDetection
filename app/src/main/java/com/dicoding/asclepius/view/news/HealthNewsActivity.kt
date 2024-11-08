@@ -27,7 +27,7 @@ class HealthNewsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        supportActionBar?.hide()
+        supportActionBar?.title = "Seputar Cancer"
 
         val newsAdapter = NewsAdapter()
         newsViewModel.fetchPosts()

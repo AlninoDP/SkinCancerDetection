@@ -3,6 +3,23 @@
     <style name="Base.Theme.Asclepius" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="actionBarStyle">@style/ActionBarCustomStyle</item>
+        
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorOnTertiary">@color/onTertiary</item>
+    </style>
+
+    <style name="ActionBarCustomStyle" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/primary</item> <!-- Set your desired color here -->
+        <item name="titleTextStyle">@style/ActionBarTitleText</item>
+    </style>
+
+    <style name="ActionBarTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item> <!-- Your desired text color -->
     </style>
 
     <style name="Theme.Asclepius" parent="Base.Theme.Asclepius" />

@@ -20,6 +20,7 @@ import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
 import com.dicoding.asclepius.getImageUri
 import com.dicoding.asclepius.helper.ImageClassifierHelper
+import com.dicoding.asclepius.view.history.AnalysisHistoryActivity
 import com.dicoding.asclepius.view.news.HealthNewsActivity
 import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             galleryButton.setOnClickListener { startGallery() }
             analyzeButton.setOnClickListener { analyzeImage() }
             cameraButton.setOnClickListener { startCamera() }
-            historyButton.setOnClickListener { }
+            historyButton.setOnClickListener { seeAnalysisHistory()}
         }
     }
 
@@ -170,6 +171,11 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(ResultActivity.EXTRA_IMAGE_URI, croppedImageUri.toString())
         intent.putExtra(ResultActivity.EXTRA_LABEL, label)
         intent.putExtra(ResultActivity.EXTRA_SCORE, score)
+        startActivity(intent)
+    }
+
+    private fun seeAnalysisHistory(){
+        val intent = Intent(this, AnalysisHistoryActivity::class.java)
         startActivity(intent)
     }
 

@@ -5,6 +5,7 @@
     android:id="@+id/health_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:padding="16dp"
     tools:context=".view.news.HealthNewsActivity">
 
@@ -26,6 +27,7 @@
         android:id="@+id/rvNews"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingTop="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

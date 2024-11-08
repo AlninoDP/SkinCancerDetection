@@ -4,16 +4,21 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.dicoding.asclepius.R
+import com.dicoding.asclepius.data.AnalysisHistoryRepository
+import com.dicoding.asclepius.data.local.entity.AnalysisHistoryEntity
 import com.dicoding.asclepius.databinding.ActivityResultBinding
+import kotlinx.coroutines.launch
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
+    private lateinit var analysisHistoryRepository: AnalysisHistoryRepository
     private var currentImageUri: Uri? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +30,7 @@ class ResultActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        analysisHistoryRepository = AnalysisHistoryRepository(applicationContext)
         supportActionBar?.title = "Hasil Analysis"
 
         // Show Image
@@ -39,6 +45,24 @@ class ResultActivity : AppCompatActivity() {
         val label = intent.getStringExtra(EXTRA_LABEL)
         val score = intent.getStringExtra(EXTRA_SCORE)
         showResult(label ?: "Default Label", score ?: "0")
+
+        binding.btnSave.setOnClickListener {
+            saveImage(imageUri.toString(), label ?: "Default Label", score ?: "0")
+        }
+    }
+
+    private fun saveImage(imageUri: String, label: String, score: String){
+        lifecycleScope.launch {
+            val entity = AnalysisHistoryEntity(
+               imageUri =  imageUri,
+                label = label,
+                score = score,
+            )
+            Log.d("ImageURI",  "loglog: $entity")
+            analysisHistoryRepository.insertAnalysisHistory(entity)
+            Toast.makeText(this@ResultActivity, "Image Saved", Toast.LENGTH_SHORT).show()
+            finish()
+        }
     }
 
     private fun showImage() {

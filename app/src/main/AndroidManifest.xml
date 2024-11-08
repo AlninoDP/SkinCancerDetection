@@ -5,7 +5,7 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Asclepius"
         tools:targetApi="31">
+        <activity
+            android:name=".view.history.AnalysisHistoryActivity"
+            android:exported="false" />
         <activity
             android:name=".view.news.HealthNewsActivity"
             android:exported="false" />
